@@ -1,0 +1,90 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+}
+
+.sliderWrupper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	height: 450px;
+	border: 1px dashed #000;
+	background-color: #bdbdbd;
+}
+
+.blockActive {
+	animation: 0.5s activeBlock linear forwards;
+}
+
+@keyframes activeBlock {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.slider {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	
+}
+
+.imagesContainer {
+	width: 250px;
+	height: 350px;
+	overflow: hidden;
+	box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, .5);
+	border-radius: 10px;
+	background-color: #fff;
+}
+
+.prod {
+	margin-left: 6px;
+	line-height: 1.2;
+}
+
+.switchingArrow {
+	width: 50px;
+	height: 50px;
+	border: none;
+	background-color: #f0f0f0;
+	border-radius: 50%;
+	opacity: .7;
+}
+
+.switchingArrow:hover {
+	opacity: 1;
+}
+
+#arrowRight {
+	transform: rotate(180deg);
+}
+
+.inputsContaiener {
+	margin-top: 8px;
+}
+
+.inputActive {
+	width: 12px;
+	height: 12px;
+	border: 1px solid #65656e;
+	background-color: #65656e;
+	border-radius: 50%;
+	transition: all 0.5s;
+}
+
+.inputDeactive {
+	width: 12px;
+	height: 12px;
+	border: 1px solid #65656e;
+	background-color: #fff;
+	border-radius: 50%;
+	transition: all 0.5s;
+}
