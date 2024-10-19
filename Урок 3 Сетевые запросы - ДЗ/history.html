@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>History image</title>
+</head>
+
+<body>
+	<a href="index.html" class="btnHistory">Вернуться</a>
+	<a href="#" id="clearStorage" class="btnHistory">Очистить историю</a>
+	<div class="historyCard"></div>
+
+	<script>
+		const historyCard = document.querySelector('.historyCard');
+
+		let lengthStorage = localStorage.length;
+
+		if (lengthStorage == 0) {
+			historyCard.innerHTML = '<h2 class="empty">Пусто</h2>';
+		} else {
+			for (let i = 0; i < lengthStorage; i++) {
+				let getKeyLocalStorage = localStorage.key(i); // описание каждого изображения
+				let getDataImage = localStorage.getItem(getKeyLocalStorage); // получаем данные по ключу
+				let parseDataImage = JSON.parse(getDataImage); // получаем объект
+				let dataLike = parseDataImage.like; // данные о лайках
+				let dataImage = parseDataImage.img; // ссылка на картинку
+
+				historyCard.insertAdjacentHTML('beforeend', `
+                    <div class="photo">
+                            <img src="${dataImage}" alt="${getKeyLocalStorage}">
+                            <h3 class="descriptionPhoto">${getKeyLocalStorage}</h3>
+                            <div class="likesContainer">
+                                <span>${dataLike}</span>
+                            </div>
+                        </div>
+                `);
+			}
+			clearStorage.addEventListener('click', () => {
+				localStorage.clear();
+				location.reload();
+			})
+		}
+
+	</script>
+</body>
+
+</html>

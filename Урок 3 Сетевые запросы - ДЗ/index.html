@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>Liker image</title>
+</head>
+
+<body>
+	<a href="history.html " class="btnHistory">История просмотров</a>
+
+	<div id="photoContainer"></div>
+
+	<script>
+
+		let counterLikes = 0;
+
+		function setLocalStorageLikeAndImage(image, description, likes) {
+			let arrayImageAndLikes = {
+				like: likes,
+				img: image
+			};
+			let arrayImageAndLikesString = JSON.stringify(arrayImageAndLikes);
+			localStorage.setItem(description, arrayImageAndLikesString);
+		}
+
+		function exampleLikes(getDescriptionCard) { // функция проверяет на наличие лайка
+			let getCard = localStorage.getItem(getDescriptionCard);
+			if (getCard) {
+				let getCardParse = JSON.parse(getCard);
+				return getCardParse.like; // если в хранилище есть лайк, то подгружает оттуда
+			} else {
+				return counterLikes; // если в хранилище нету, то устанавливает в ноль
+			}
+		}
+
+		async function fetchPhotos() {
+			try {
+				const responce = await fetch(`https://api.unsplash.com/photos/?client_id=dd0ha7mTDF8bCNEKBKHor00ARVz8pnIJkWa5w8-xYyQ`)
+				const photos = await responce.json();
+				return photos;
+			} catch (error) {
+				console.error('Ошибка при загрузке фотографий:', error);
+				return [];
+			}
+		}
+		async function loadMorePhotos() {
+			const photos = await fetchPhotos();
+			if (photos.length > 0) {
+				photos.forEach(photo => {
+					let photoDescription = photo.alt_description; // Описание фотографии
+					let namePhotographer = photo.user.name; // имя фотографа
+
+					photoContainer.insertAdjacentHTML('beforeend', `
+                        <div class="photo">
+                            <img src="${photo.urls.small}" alt="${photoDescription}">
+                            <div class="infoPhoto">
+															<h4 class="namePhotographer">${namePhotographer}</h4>
+															<div class="descriptionPhoto">${photoDescription}</div>
+															</div>
+                            <div class="likesContainer">
+                                <button id="buttonLike">LIKE</button>
+                                <span>${exampleLikes(photoDescription)}</span>
+                            </div>
+                        </div>
+                    `);
+				});
+
+				const buttonLike = document.querySelectorAll('#buttonLike');
+
+				buttonLike.forEach(button => {
+					button.addEventListener('click', function (event) {
+						let btnTarget = event.target; // Кнопка на которую нажали
+						let likesContainerElem = btnTarget.parentNode; // родительский элемент кнопки
+						let elementDescription = likesContainerElem.previousElementSibling; // предыдущий элемент блока likesContainer
+						let elemImage = elementDescription.previousElementSibling.src; // ссылка на фотографию
+						let imageAlt = elementDescription.previousElementSibling.alt; // атрибут alt
+						let countLike = ++btnTarget.nextElementSibling.textContent; // счетчик лайков
+
+						setLocalStorageLikeAndImage(elemImage, imageAlt, countLike); // функция записи данных о лайкнутой фотографии в localStorage
+					})
+				})
+
+			}
+		}
+
+		loadMorePhotos();
+	</script>
+</body>
+
+</html>
